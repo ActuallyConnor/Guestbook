@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    port: 3306:30060

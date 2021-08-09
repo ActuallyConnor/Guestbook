@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * @ORM\Entity(repositoryClass=ConferenceRepository::class)
@@ -61,6 +62,13 @@ class Conference
         return $this->id;
     }
 
+    public function computeSlug(AsciiSlugger $slugger)
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $this->slug = (string) $slugger->slug((string) $this)->lower();
+        }
+    }
+
     public function getCity(): ?string
     {
         return $this->city;
@@ -107,7 +115,7 @@ class Conference
 
     public function addComment(Comment $comment): self
     {
-        if (!$this->comments->contains($comment)) {
+        if ( ! $this->comments->contains($comment)) {
             $this->comments[] = $comment;
             $comment->setConference($this);
         }

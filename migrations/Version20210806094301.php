@@ -24,7 +24,7 @@ final class Version20210806094301 extends AbstractMigration
         $this->addSql('
             CREATE TABLE sessions (
                 sess_id VARCHAR(128) NOT NULL PRIMARY KEY,
-                sess_data BINARY NOT NULL,
+                sess_data BLOB NOT NULL,
                 sess_lifetime INTEGER NOT NULL,
                 sess_time INTEGER NOT NULL
             )

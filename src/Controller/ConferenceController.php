@@ -7,7 +7,7 @@ use App\Entity\Conference;
 use App\Form\CommentFormType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,7 @@ class ConferenceController extends AbstractController
     private $twig;
     private $entityManager;
 
-    public function __construct(Environment $twig, EntityManager $entityManager)
+    public function __construct(Environment $twig, EntityManagerInterface $entityManager)
     {
         $this->twig = $twig;
         $this->entityManager = $entityManager;

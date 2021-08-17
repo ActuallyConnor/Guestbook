@@ -11,10 +11,10 @@ class SpamChecker
     private $client;
     private $endpoint;
 
-    public function __construct(HttpClientInterface $client, string $askimetKey)
+    public function __construct(HttpClientInterface $client, string $akismetKey)
     {
         $this->client   = $client;
-        $this->endpoint = sprintf('https://%s.rest.askimet.com/1.1/comment-check', $askimetKey);
+        $this->endpoint = sprintf('https://%s.rest.akismet.com/1.1/comment-check', $akismetKey);
     }
 
     /**
@@ -41,13 +41,13 @@ class SpamChecker
         ]);
 
         $headers = $response->getHeaders();
-        if ('discard' === ($headers['x-askimet-pro-tip'][0] ?? '')) {
+        if ('discard' === ($headers['x-akismet-pro-tip'][0] ?? '')) {
             return 2;
         }
 
         $content = $response->getContent();
-        if (isset($headers['x-askimet-debug-help'][0])) {
-            throw new \RuntimeException(sprintf('Unable to check for spam: %s (%s).', $content, $headers['x-askimet-debug-help'][0]));
+        if (isset($headers['x-akismet-debug-help'][0])) {
+            throw new \RuntimeException(sprintf('Unable to check for spam: %s (%s).', $content, $headers['x-akismet-debug-help'][0]));
         }
 
         return 'true' === $content ? 1 : 0;

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -55,7 +56,7 @@ class Comment
 
     public function __toString(): string
     {
-        return (string)$this->getEmail();
+        return (string) $this->getEmail();
     }
 
     public function getId(): ?int

@@ -13,6 +13,7 @@
 /config/secrets/dev/dev.AKISMET_KEY.ca01fb.php
 /config/secrets/dev/dev.decrypt.private.php
 /config/secrets/dev/dev.encrypt.public.php
+config/secrets/test/*
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache

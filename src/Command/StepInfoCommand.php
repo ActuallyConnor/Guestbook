@@ -12,7 +12,7 @@ class StepInfoCommand extends Command
 {
     protected static $defaultName = 'app:step:info';
 
-    private $cache;
+    private CacheInterface $cache;
 
     public function __construct(CacheInterface $cache)
     {

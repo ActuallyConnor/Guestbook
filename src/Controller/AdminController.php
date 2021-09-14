@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Message\CommentMessage;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpCache\HttpCache;
@@ -22,7 +22,7 @@ class AdminController extends AbstractController
     private $entityManager;
     private $bus;
 
-    public function __construct(Environment $twig, EntityManager $entityManager, MessageBusInterface $bus)
+    public function __construct(Environment $twig, EntityManagerInterface $entityManager, MessageBusInterface $bus)
     {
         $this->twig          = $twig;
         $this->entityManager = $entityManager;

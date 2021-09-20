@@ -10,20 +10,13 @@
 /vendor/
 ###< symfony/framework-bundle ###
 /public/uploads
-/config/secrets/dev/dev.AKISMET_KEY.ca01fb.php
-/config/secrets/dev/dev.decrypt.private.php
-/config/secrets/dev/dev.encrypt.public.php
 config/secrets/test/*
+config/secrets/dev/*
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

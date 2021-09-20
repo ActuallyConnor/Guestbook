@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -11,20 +12,18 @@ use Symfony\Component\HttpKernel\HttpCache\HttpCache;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Workflow\Registry;
-use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
 
 #[Route('/admin')]
 class AdminController extends AbstractController
 {
-    private $twig;
-    private $entityManager;
-    private $bus;
+    private EntityManagerInterface $entityManager;
+    private MessageBusInterface $bus;
 
-    public function __construct(Environment $twig, EntityManagerInterface $entityManager, MessageBusInterface $bus)
+    public function __construct(EntityManagerInterface $entityManager, MessageBusInterface $bus)
     {
-        $this->twig          = $twig;
         $this->entityManager = $entityManager;
         $this->bus           = $bus;
     }
@@ -34,8 +33,8 @@ class AdminController extends AbstractController
         Request $request,
         Comment $comment,
         Registry $registry
-    ): Response {
-        $accepted = ! $request->query->get('reject');
+    ) : Response {
+        $accepted = !$request->query->get('reject');
 
         $machine = $registry->get($comment);
         if ($machine->can($comment, 'publish')) {
@@ -50,17 +49,22 @@ class AdminController extends AbstractController
         $this->entityManager->flush();
 
         if ($accepted) {
-            $this->bus->dispatch(new CommentMessage($comment->getId()));
+            $reviewUrl = $this->generateUrl(
+                'review_comment',
+                ['id' => $comment->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $this->bus->dispatch(new CommentMessage($comment->getId(), $reviewUrl));
         }
 
         return $this->render('admin/review.html.twig', [
             'transition' => $transition,
-            'comment'    => $comment
+            'comment'    => $comment,
         ]);
     }
 
     #[Route('/http-cache/{uri<.*>}', methods: ['PURGE'])]
-    public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri): Response
+    public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri) : Response
     {
         if ('prod' === $kernel->getEnvironment()) {
             return new Response('KO', 400);
@@ -68,7 +72,7 @@ class AdminController extends AbstractController
 
         $store = (new class($kernel) extends HttpCache {
         })->getStore();
-        $store->purge($request->getSchemeAndHttpHost().'/'.$uri);
+        $store->purge($request->getSchemeAndHttpHost() . '/' . $uri);
 
         return new Response('Done');
     }

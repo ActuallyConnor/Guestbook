@@ -1,8 +1,7 @@
-# Default ignored files
-/shelf/
+dictionaries/
 /workspace.xml
-# Datasource local storage ignored files
-/dataSources/
+/watcherTasks.xml
+
+/dataSources.xml
 /dataSources.local.xml
-# Editor-based HTTP Client requests
-/httpRequests/
+/dataSources.ids

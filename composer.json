@@ -13,6 +13,7 @@
         "doctrine/orm": "^2.9",
         "easycorp/easyadmin-bundle": "^3",
         "imagine/imagine": "^1.2",
+        "phpstan/phpstan": "^0.12.99",
         "sensio/framework-extra-bundle": "^6.1",
         "symfony/cache": "5.2.*",
         "symfony/console": "5.2.*",

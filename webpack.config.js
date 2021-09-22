@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -7,12 +8,13 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 Encore
-    // directory where compiled assets will be stored
-    .setOutputPath('public/build/')
-    // public path used by the web server to access the output path
-    .setPublicPath('/build')
-    // only needed for CDN's or sub-directory deploy
-    //.setManifestKeyPrefix('build/')
+    .setOutputPath('public/')
+    .setPublicPath('/')
+    .cleanupOutputBeforeBuild()
+    .addEntry('app', './src/app.js')
+    .enablePreactPreset()
+    .enableSingleRuntimeChunk()
+    .addPlugin(new HtmlWebpackPlugin({ template: 'src/index.ejs', alwaysWriteToDisk: true }))
 
     /*
      * ENTRY CONFIG

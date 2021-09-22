@@ -1,5 +1,5 @@
 /node_modules
 /public
-/yan-error.log
+/yarn-error.log
 # used later by Cordova
 /app

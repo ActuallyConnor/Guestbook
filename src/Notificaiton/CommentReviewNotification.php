@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace App\Notification;
+
 use App\Entity\Comment;
 use Symfony\Component\Notifier\Bridge\Slack\Block\SlackDividerBlock;
 use Symfony\Component\Notifier\Bridge\Slack\Block\SlackSectionBlock;

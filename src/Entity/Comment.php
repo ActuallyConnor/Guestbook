@@ -1,14 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\CommentRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ *
+ * @ApiResource(
+ *     collectionOperations={"get"={"normalization_context"={"groups"="comment:list"}}},
+ *     itemOperations={"get"={"normalization_context"={"groups"="comment:item"}}},
+ *     order={"year"="DESC", "city"="ASC"},
+ *     paginationEnabled=false
+ * )
+ *
+ * @ApiFilter(SearchFilter::class, properties={"conference": "exact"})
  */
 class Comment
 {
@@ -17,100 +33,141 @@ class Comment
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    #[Groups(['comment:list', 'comment:item'])]
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     #[Assert\NotBlank]
-    private $author;
+    #[Groups(['comment:list', 'comment:item'])]
+    private ?string $author;
 
     /**
      * @ORM\Column(type="text")
      */
     #[Assert\NotBlank]
-    private $text;
+    #[Groups(['comment:list', 'comment:item'])]
+    private ?string $text;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     #[Assert\NotBlank]
     #[Assert\Email]
-    private $email;
+    #[Groups(['comment:list', 'comment:item'])]
+    private ?string $email;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    #[Groups(['comment:list', 'comment:item'])]
+    private ?DateTimeInterface $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Conference::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $conference;
+    #[Groups(['comment:list', 'comment:item'])]
+    private ?Conference $conference;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $photoFilename;
+    #[Groups(['comment:list', 'comment:item'])]
+    private ?string $photoFilename;
 
     /**
      * @ORM\Column(type="string", length=255), options={"default": "submitted"}
      */
-    private $state = 'submitted';
+    #[Groups(['comment:list', 'comment:item'])]
+    private string $state = 'submitted';
 
-    public function __toString(): string
+    /**
+     * @return string
+     */
+    public function __toString() : string
     {
         return (string) $this->getEmail();
     }
 
-    public function getId(): ?int
+    /**
+     * @return int|null
+     */
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    public function getAuthor(): ?string
+    /**
+     * @return string|null
+     */
+    public function getAuthor() : ?string
     {
         return $this->author;
     }
 
-    public function setAuthor(string $author): self
+    /**
+     * @param string $author
+     *
+     * @return $this
+     */
+    public function setAuthor(string $author) : self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    public function getText(): ?string
+    /**
+     * @return string|null
+     */
+    public function getText() : ?string
     {
         return $this->text;
     }
 
-    public function setText(string $text): self
+    /**
+     * @param string $text
+     *
+     * @return $this
+     */
+    public function setText(string $text) : self
     {
         $this->text = $text;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    /**
+     * @return string|null
+     */
+    public function getEmail() : ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email) : self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getCreatedAt() : ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @param DateTimeInterface $createdAt
+     *
+     * @return $this
+     */
+    public function setCreatedAt(DateTimeInterface $createdAt) : self
     {
         $this->createdAt = $createdAt;
 
@@ -125,36 +182,60 @@ class Comment
         $this->createdAt = new \DateTime();
     }
 
-    public function getConference(): ?Conference
+    /**
+     * @return Conference|null
+     */
+    public function getConference() : ?Conference
     {
         return $this->conference;
     }
 
-    public function setConference(?Conference $conference): self
+    /**
+     * @param Conference|null $conference
+     *
+     * @return $this
+     */
+    public function setConference(?Conference $conference) : self
     {
         $this->conference = $conference;
 
         return $this;
     }
 
-    public function getPhotoFilename(): ?string
+    /**
+     * @return string|null
+     */
+    public function getPhotoFilename() : ?string
     {
         return $this->photoFilename;
     }
 
-    public function setPhotoFilename(?string $photoFilename): self
+    /**
+     * @param string|null $photoFilename
+     *
+     * @return $this
+     */
+    public function setPhotoFilename(?string $photoFilename) : self
     {
         $this->photoFilename = $photoFilename;
 
         return $this;
     }
 
-    public function getState(): ?string
+    /**
+     * @return string|null
+     */
+    public function getState() : ?string
     {
         return $this->state;
     }
 
-    public function setState(string $state): self
+    /**
+     * @param string $state
+     *
+     * @return $this
+     */
+    public function setState(string $state) : self
     {
         $this->state = $state;
 
